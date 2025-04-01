@@ -1,0 +1,31 @@
+# Terraform files
+*.tfstate
+*.tfstate.backup
+.terraform/
+crash.log
+override.tf
+override.tf.json
+terraform.tfvars
+terraform.tfvars.json
+
+# Local .terraform directories
+**/.terraform/*
+
+# Sensitive files
+*.pem
+*.key
+*.env
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# Node (in case you add JS-based monitoring tools, etc.)
+node_modules/
+npm-debug.log*
+
+# Docker
+**/docker-compose.override.yml
+**/.docker/
