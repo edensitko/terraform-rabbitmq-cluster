@@ -1,109 +1,66 @@
-# RabbitMQ Cluster Deployment on AWS with Terraform
+# 🚀 RabbitMQ Cluster on AWS with Terraform
 
-This Terraform module provisions a highly available RabbitMQ cluster on AWS using EC2, Auto Scaling, Load Balancer, and Docker.
+This project automates the deployment of a **highly available RabbitMQ cluster** using **Terraform** and **AWS** services.
 
----
+## ✅ Features
 
-## ✨ Features
-- Multi-node RabbitMQ cluster for high availability
-- Auto Scaling Group (ASG) with 3 EC2 instances
-- Docker-based RabbitMQ 3.12-management container
-- Clustering with Erlang cookie and dynamic node joining
-- Load Balancer (ALB) on port 80 forwarding to RabbitMQ Management UI on port 15672
+- 🧱 Infrastructure as Code with Terraform
+- 💇 Multi-node RabbitMQ cluster using Docker
+- 🖁️ Auto Scaling Group (ASG) for horizontal scaling
+- ⚖️ Application Load Balancer (ALB) to route traffic to the cluster (port 80 → 15672)
+- 🔒 Secure with AWS security groups
+- 📡 Cluster joins automatically using shared cookie
+- 📦 Lightweight deployment via Docker containers
 
----
+## 🗂️ Folder Structure
 
-## 🌐 Architecture Overview
-```
-          [ Users / Clients ]
-                 |
-            [ AWS ALB ] (Port 80)
-                 |
-      --------------------------
-     |            |            |
- [ EC2-1 ]   [ EC2-2 ]   [ EC2-3 ]  (Auto Scaling Group)
-     |            |            |
-  [ Docker ]   [ Docker ]   [ Docker ]
-     |            |            |
-  RabbitMQ     RabbitMQ     RabbitMQ
-  (Node 1)     (Node 2)     (Node 3)
-```
-
----
-
-## ⚙️ Setup Instructions
-
-### 1. Clone & Initialize Terraform
-```bash
-git clone <your-repo>
-cd your-repo
-terraform init
-```
-
-### 2. Configure Variables
-Make sure `terraform.tfvars` includes:
-```hcl
-ami_id           = "ami-xxxxxxxxxxxxxxxxx"
-instance_type    = "t2.micro"
-root_volume_size = 8
-vpc_id           = "vpc-xxxxxxxx"
-subnet_ids       = ["subnet-xxx", "subnet-yyy"]
-```
-
-### 3. Deploy the Infrastructure
-```bash
-terraform apply -auto-approve
-```
-
-### 4. Access RabbitMQ Management UI
-- Open the ALB DNS name in your browser:  
-  `http://<load-balancer-dns>`
-- Login with credentials:
-  - **Username:** `admin`
-  - **Password:** `admin123`
-
----
-
-## ✅ Validation Steps
-- Access the UI and confirm **Cluster name** appears as `rabbit@<hostname>`
-- Under **Admin → Nodes**, ensure 3 nodes are present and running
-- Use this command inside a container (optional):
-```bash
-docker exec rabbitmq rabbitmqctl cluster_status
-```
-
----
-
-## 🛡️ Security
-- Security group allows ports: 80, 15672, 5672, 22
-- Cookie secret for secure node communication
-- IAM not used in this module (can be extended)
-
----
-
-## 🎯 Enhancements (Optional)
-- Enable EBS volume for persistent RabbitMQ storage
-- Add CloudWatch metrics and alarms for scaling
-- Backup & disaster recovery automation
-
----
-
-## 📄 Files Structure
 ```
 .
 ├── main.tf
 ├── variables.tf
 ├── outputs.tf
 ├── terraform.tfvars
+├── network.tf
+├── .gitignore
 └── README.md
 ```
 
----
+## 🛠️ Prerequisites
 
-## 📤 Outputs
-- `alb_dns`: Load Balancer URL
-- `rabbitmq_asg_name`: Name of the Auto Scaling Group
+- AWS CLI configured
+- Terraform installed (`>= 1.0`)
+- Valid AWS credentials
+- An existing VPC or use the included `network.tf`
 
----
+## 🚀 Deployment
 
-## 🚀 Ready to scale and cluster your messaging system!
+1. Initialize Terraform:
+   ```bash
+   terraform init
+   ```
+
+2. Apply the configuration:
+   ```bash
+   terraform apply -auto-approve
+   ```
+
+3. Access the RabbitMQ Web UI:
+   ```
+   http://<ALB_DNS>:80
+   ```
+
+   Login:
+   - **Username**: `admin`
+   - **Password**: `admin123`
+
+## 🧪 Testing Cluster
+
+Once deployed, navigate to the **Cluster** tab in the RabbitMQ UI and verify multiple nodes (e.g. `rabbit@ip-...`).
+
+## 🛉 Cleanup
+
+To destroy the infrastructure:
+
+```bash
+terraform destroy -auto-approve
+```
